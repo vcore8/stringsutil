@@ -3,6 +3,11 @@ package stringsutil
 import (
 	"fmt"
 	"strings"
+
+	"unicode"
+	"golang.org/x/text/transform"
+    "golang.org/x/text/unicode/norm"
+	"golang.org/x/text/runes"
 )
 
 // https://www.dotnetperls.com/between-before-after-go
@@ -137,4 +142,11 @@ func EqualFoldAny(s string, ss ...string) bool {
 		}
 	}
 	return false
+}
+
+// Remove all accents of a given string, return clean string.
+func RemoveAccent(oldname string) string {
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+    newname, _, _ := transform.String(t, oldname)
+    return newname
 }
