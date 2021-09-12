@@ -1,4 +1,4 @@
-module github.com/projectdiscovery/stringsutil
+module github.com/vcore8/stringsutil
 
 go 1.16
 
