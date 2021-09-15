@@ -187,3 +187,34 @@ func TestEqualFoldAny(t *testing.T) {
 		require.Equalf(t, test.Result, res, "test: %+v", res)
 	}
 }
+
+func TestUnicodeToAscii(t *testing.T) {
+	type args struct {
+		str string
+	}
+
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "string_converted",
+			args: args{"\xe1\xe9"},
+			want: "áé",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := UnicodeToAscii(tt.args.str)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UnicodeToAscii() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("UnicodeToAscii() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

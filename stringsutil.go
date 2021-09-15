@@ -1,11 +1,14 @@
 package stringsutil
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"unicode"
 
+	"golang.org/x/text/encoding/ianaindex"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
@@ -150,4 +153,17 @@ func RemoveAccent(oldname string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	newname, _, _ := transform.String(t, oldname)
 	return newname
+}
+
+func UnicodeToAscii(str string) (string, error) {
+	e, err := ianaindex.MIME.Encoding("latin1")
+	if err != nil {
+		return "", err
+	}
+	r := transform.NewReader(bytes.NewBufferString(str), e.NewDecoder())
+	text, err := ioutil.ReadAll(r)
+	if err != nil {
+		return "", err
+	}
+	return string(text), nil
 }
